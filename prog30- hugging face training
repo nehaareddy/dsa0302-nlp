@@ -1,0 +1,71 @@
+from transformers import MarianMTModel, MarianTokenizer
+
+def translate_text(text, model_name="Helsinki-NLP/opus-mt-en-de"):
+    # Load pre-trained model and tokenizer
+    model = MarianMTModel.from_pretrained(model_name)
+    tokenizer = MarianTokenizer.from_pretrained(model_name)
+
+    # Tokenize input text
+    inputs = tokenizer(text, return_tensors="pt")
+
+    # Generate translation
+    translation = model.generate(**inputs)
+
+    # Decode and return the translated text
+    translated_text = tokenizer.batch_decode(translation, skip_special_tokens=True)[0]
+    return translated_text
+
+# Example usage
+english_text = "Hello, how are you?"
+german_translation = translate_text(english_text)
+
+print(f"English: {english_text}")
+print(f"German: {german_translation}")
+
+     
+---------------------------------------------------------------------------
+ImportError                               Traceback (most recent call last)
+<ipython-input-11-523c337bc245> in <cell line: 20>()
+     18 # Example usage
+     19 english_text = "Hello, how are you?"
+---> 20 german_translation = translate_text(english_text)
+     21 
+     22 print(f"English: {english_text}")
+
+<ipython-input-11-523c337bc245> in translate_text(text, model_name)
+      4     # Load pre-trained model and tokenizer
+      5     model = MarianMTModel.from_pretrained(model_name)
+----> 6     tokenizer = MarianTokenizer.from_pretrained(model_name)
+      7 
+      8     # Tokenize input text
+
+/usr/local/lib/python3.10/dist-packages/transformers/utils/import_utils.py in __getattribute__(cls, key)
+   1257         if key.startswith("_") and key != "_from_config":
+   1258             return super().__getattribute__(key)
+-> 1259         requires_backends(cls, cls._backends)
+   1260 
+   1261 
+
+/usr/local/lib/python3.10/dist-packages/transformers/utils/import_utils.py in requires_backends(obj, backends)
+   1245     failed = [msg.format(name) for available, msg in checks if not available()]
+   1246     if failed:
+-> 1247         raise ImportError("".join(failed))
+   1248 
+   1249 
+
+ImportError: 
+MarianTokenizer requires the SentencePiece library but it was not found in your environment. Checkout the instructions on the
+installation page of its repo: https://github.com/google/sentencepiece#installation and follow the ones
+that match your environment. Please note that you may need to restart your runtime after installation.
+
+
+---------------------------------------------------------------------------
+NOTE: If your import is failing due to a missing package, you can
+manually install dependencies using either !pip or !apt.
+
+To view examples of installing some common dependencies, click the
+"Open Examples" button below.
+---------------------------------------------------------------------------
+
+
+     
